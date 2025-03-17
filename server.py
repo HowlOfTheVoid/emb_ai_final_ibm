@@ -1,3 +1,6 @@
+'''Hosts server module, launching the flask app and 
+sending the emotion detector request.'''
+
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -14,16 +17,18 @@ def sent_detector():
 
     response = emotion_detector(text_to_analyze)
 
+    dominant_emotion = response['dominant_emotion']
+
+    if dominant_emotion is None:
+        return "Invalid input! Please try again."
+
     anger = response['anger']
     disgust = response['disgust']
     fear = response['fear']
     joy = response['joy']
     sadness = response['sadness']
-    dominant_emotion = response['dominant_emotion']
 
-    if dominant_emotion is None:
-        return "Invalid input! Please try again."
-    return (f"For the given statement, the system response is " +
+    return ("For the given statement, the system response is " +
             f"'anger': {anger}, 'disgust': {disgust}, " + 
             f"'fear': {fear}, 'joy': {joy} and 'sadness': {sadness}. " + 
             f"The dominant emotion is {dominant_emotion}.")
